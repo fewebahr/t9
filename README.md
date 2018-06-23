@@ -1,6 +1,6 @@
 # T9
 
-This is my reference implementation of a [T9](https://en.wikipedia.org/wiki/T9_(predictive_text) server and client. There is particular emphasis on modularity with clear boundaries, reliability, and performance.
+This is my reference implementation of a [T9](https://en.wikipedia.org/wiki/T9_\(predictive_text\)) server and client. There is particular emphasis on modularity with clear boundaries, reliability, and performance.
 
 ## Building
 
