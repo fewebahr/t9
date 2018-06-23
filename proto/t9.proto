@@ -1,0 +1,28 @@
+syntax="proto3";
+
+package t9;
+
+import "google/api/annotations.proto";
+
+option go_package="proto";
+
+service T9 {
+    rpc Lookup(LookupRequest) returns (LookupResponse) {
+        option (google.api.http) = {
+            get: "/api/lookup/{digits}"
+        };
+    }
+}
+
+message LookupRequest {
+    string digits = 1;
+    bool exact = 2;
+}
+
+message LookupResponse {
+    string digits = 1;
+    bool exact = 2;
+    bool status = 3;
+    repeated string words = 4;
+    string message =  5;
+}

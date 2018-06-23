@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  t9:
+    build: "."
+    image: "t9:latest"
+    container_name: "t9"
+    restart: "always"
+    ports:
+      - "4239:4239"
