@@ -74,3 +74,9 @@ $ t9 client
 * Unit tests with mocks
 * Update frontend to use vanilla js instead of jquery and semantic
 * Support Brotli (once there is native, pure-go support)
+
+## Etc.
+
+This project is licensed under the terms of the *GNU General Public License v2.0*
+
+Copyright ©2018 Robert Ellis <robert.grant.ellis@gmail.com>
