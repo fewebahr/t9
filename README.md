@@ -11,11 +11,8 @@ The build process requires the following tools installed:
 * [Make](https://www.gnu.org/software/make/)
 * [OpenSSL](https://www.openssl.org/)
 * The [Go](https://golang.org/) toolchain
-* [Go-Bindata](https://github.com/jteeuwen/go-bindata)
-* [Gomock](https://github.com/golang/mock)
 * [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/)
-* [Protobuf compiler](https://github.com/google/protobuf/blob/master/README.md#protocol-compiler-installation) and [Protobuf Go Runtime](https://github.com/golang/protobuf)
-* [GRPC Gateway](https://github.com/grpc-ecosystem/grpc-gateway)
+* [Protobuf compiler](https://github.com/google/protobuf/blob/master/README.md#protocol-compiler-installation)
 * Optionally, [Docker](https://www.docker.com/) and [Docker-compose](https://docs.docker.com/compose/)
 
 ### Building and installing locally
