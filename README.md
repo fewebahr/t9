@@ -11,7 +11,6 @@ The build process requires the following tools installed:
 * [Make](https://www.gnu.org/software/make/)
 * [OpenSSL](https://www.openssl.org/)
 * The [Go](https://golang.org/) toolchain
-* Go [Dep](https://github.com/golang/dep)
 * [Go-Bindata](https://github.com/jteeuwen/go-bindata)
 * [Gomock](https://github.com/golang/mock)
 * [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/)
@@ -57,10 +56,11 @@ On your local machine after local installation, run the server by typing:
 
 ```shell
 $ t9 server
+info  2020/05/11 14:31:03 server listening on https://127.0.0.1:4239/
 ```
 
 While the server is running you may either:
-* Direct your browser to the address specified
+* Direct your browser to the address specified (**warning**: if you used the default command-line flags as in example above, expect an untrusted certificate warning.)
 * Run the CLI client by typing:
 
 ```shell

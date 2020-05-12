@@ -1,5 +1,4 @@
-# This makefile requires the go tools and dep, which can be installed on a Mac with Homebrew:
-# brew install go dep
+# This makefile requires the go tools.
 # This makefile also requires docker and docker-compose (https://www.docker.com/)
 # See also subordinate makefile dependencies
 
@@ -13,13 +12,19 @@ GOINSTALL=$(GOCMD) install
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 
-DEP=dep
 MAKE=make
 RM=rm
 DOCKERCOMPOSE=docker-compose
 
-all: generate vendor test install
-generate:
+all: tools gen test install
+tools:
+	$(GOINSTALL) \
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
+		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
+		github.com/golang/protobuf/protoc-gen-go \
+		github.com/jteeuwen/go-bindata/... \
+		github.com/golang/mock/{gomock,mockgen}
+gen:
 	# the following makefiles have their own dependencies. See comments in each one.
 	$(MAKE) -C frontend
 	rm -rf bindata/frontend && cp -R frontend/dist bindata/frontend
@@ -27,8 +32,6 @@ generate:
 	$(MAKE) -C proto
 	$(MAKE) -C mocks
 	$(GOFMT) ./...
-vendor:
-	$(DEP) ensure
 test: 
 	$(GOTEST) -v ./...
 install:
@@ -41,10 +44,10 @@ clean:
 	$(MAKE) -C proto clean
 	$(MAKE) -C mocks clean
 
-linux: generate vendor test
+linux: gen test
 	@mkdir -p output/
 	GOOS=linux GOARCH=amd64 go build -o "output/$(BINARY_NAME)" .
 	@echo "see binary output/$(BINARY_NAME)"
 
-docker: generate vendor test
+docker: gen test
 	$(DOCKERCOMPOSE) build
