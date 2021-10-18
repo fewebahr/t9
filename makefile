@@ -30,7 +30,6 @@ gen:
 	rm -rf bindata/frontend && cp -R frontend/dist bindata/frontend
 	$(MAKE) -C bindata
 	$(MAKE) -C proto
-	$(MAKE) -C mocks
 	$(GOFMT) ./...
 test: 
 	$(GOTEST) -v ./...
@@ -42,7 +41,6 @@ clean:
 	$(MAKE) -C frontend clean
 	$(MAKE) -C bindata clean
 	$(MAKE) -C proto clean
-	$(MAKE) -C mocks clean
 
 linux: gen test
 	@mkdir -p output/

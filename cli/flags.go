@@ -8,31 +8,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/RobertGrantEllis/t9/client"
 	"github.com/RobertGrantEllis/t9/server"
 )
 
-func getClientConfigurationFromArgs(args ...string) *client.Configuration {
-
-	if len(args) == 0 {
-		fail(errors.New(`no arguments provided`))
-	}
-
-	// creates a flagset and a configuration and sets up the flagset so it parses into the configuration
-	fs := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	configuration := client.NewConfiguration()
-
-	fs.StringVar(&configuration.Address, `address`, configuration.Address, `address for reaching t9 server`)
-	fs.DurationVar(&configuration.ConnectionTimeout, `connection-timeout`, configuration.ConnectionTimeout, `timeout for connecting to server`)
-	fs.DurationVar(&configuration.RequestTimeout, `request-timeout`, configuration.RequestTimeout, `timeout for making requsts against server`)
-
-	addHelpAndParse(fs, args...)
-
-	return &configuration
-}
-
-func getServerConfigurationFromArgs(args ...string) *server.Configuration {
-
+func constructServerConfigurationFromFlags(args ...string) *server.Configuration {
 	if len(args) == 0 {
 		fail(errors.New(`no arguments provided`))
 	}
@@ -54,7 +33,6 @@ func getServerConfigurationFromArgs(args ...string) *server.Configuration {
 }
 
 func addHelpAndParse(fs *flag.FlagSet, args ...string) {
-
 	// put in a help flag
 	help := false
 	fs.BoolVar(&help, `help`, help, `show this help message`)
@@ -79,7 +57,6 @@ func addHelpAndParse(fs *flag.FlagSet, args ...string) {
 }
 
 func printHelp(fs *flag.FlagSet, err error) {
-
 	exitCode := 0
 	if err != nil {
 		printError(err)

@@ -7,6 +7,5 @@ import (
 )
 
 func main() {
-
-	cli.StartCLI(os.Args...)
+	cli.StartServerFromFlags(os.Args...)
 }

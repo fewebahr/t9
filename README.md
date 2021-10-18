@@ -67,8 +67,12 @@ $ t9 client
 ## TODO
 
 * Support lets-encrypt?
+* Use false in-memory piping between GRPC client and server
 * Add cache-control/expires headers
-* Unit tests with mocks
+* Use new go errors
+* Unit tests
+* Consider adopting zap for faster logging
+* Update to use native go binary asset embedding
 * Update frontend to use vanilla js instead of jquery and semantic
 * Support Brotli (once there is native, pure-go support)
 

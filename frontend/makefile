@@ -5,7 +5,7 @@ NPMINSTALL=$(NPM) install
 NPMRUNBUILD=$(NPMRUN) build
 NPMRUNTEST=$(NPMRUN) test
 NPMRUNCLEAN=$(NPMRUN) clean
-NPMRUNDEBUG=$(NPMRUN) debug
+NPMRUNDEV=$(NPMRUN) dev
 
 all: node_modules dist
 node_modules: # gets all dependencies with npm
@@ -16,5 +16,5 @@ test:
 	$(NPMRUNTEST)
 clean: 
 	$(NPMRUNCLEAN)
-debug:
-	$(NPMRUNDEBUG)
+dev:
+	$(NPMRUNDEV)

@@ -9,15 +9,13 @@ import (
 	"github.com/RobertGrantEllis/t9/server"
 )
 
-func startServerWithArgs(args ...string) {
-
-	server := getServerFromArgs(args...)
+func StartServerFromFlags(args ...string) {
+	server := constructServerFromFlags(args...)
 	runServerUntilInterrupt(server)
 }
 
-func getServerFromArgs(args ...string) server.Server {
-
-	configuration := getServerConfigurationFromArgs(args...)
+func constructServerFromFlags(args ...string) server.Server {
+	configuration := constructServerConfigurationFromFlags(args...)
 
 	server, err := server.New(*configuration)
 	if err != nil {
@@ -28,13 +26,11 @@ func getServerFromArgs(args ...string) server.Server {
 }
 
 func runServerUntilInterrupt(server server.Server) {
-
 	go stopServerOnInterrupt(server)
 	server.Start()
 }
 
 func stopServerOnInterrupt(server server.Server) {
-
 	sigChan := make(chan os.Signal)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
