@@ -9,6 +9,8 @@ import (
 	"github.com/RobertGrantEllis/t9/server"
 )
 
+// StartServerFromFlags instantiates and starts a server according to the designated flags. If the flags are invalid
+// then the program exits with an error code.
 func StartServerFromFlags(args ...string) {
 	server := constructServerFromFlags(args...)
 	runServerUntilInterrupt(server)
@@ -31,7 +33,7 @@ func runServerUntilInterrupt(server server.Server) {
 }
 
 func stopServerOnInterrupt(server server.Server) {
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	stopping := false

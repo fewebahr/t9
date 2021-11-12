@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Configuration is a structure encapsulating all configurable elements for a Client.
 type Configuration struct {
 	Address string
 
@@ -19,6 +20,7 @@ type Configuration struct {
 	TrustedCertificateFile string
 }
 
+// NewConfiguration returns a default Configuration.
 func NewConfiguration() Configuration {
 
 	return Configuration{

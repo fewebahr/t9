@@ -25,6 +25,6 @@ func (s *server) instantiateAndRegisterRestfulHandler() error {
 		return err
 	}
 
-	s.restfulApiHandler = enableCors(restHandler)
+	s.restfulAPIHandler = enableCors(restHandler)
 	return nil
 }

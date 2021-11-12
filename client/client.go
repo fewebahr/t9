@@ -11,11 +11,13 @@ import (
 	"github.com/RobertGrantEllis/t9/proto"
 )
 
+// Client is a simple interface for invoking T9 RPC methods.
 type Client interface {
 	proto.T9Client
 	SimpleLookup(string, bool) ([]string, error)
 }
 
+// New instantiates a Client with the designated Configuration file, if any.
 func New(configurations ...Configuration) (Client, error) {
 
 	var configuration Configuration
@@ -33,7 +35,7 @@ func New(configurations ...Configuration) (Client, error) {
 		return nil, errors.Wrap(err, `cannot instantiate client`)
 	}
 
-	tlsConfig, err := getClientTlsConfig()
+	tlsConfig, err := getClientTLSConfig()
 	if err != nil {
 		return nil, err
 	}
@@ -66,6 +68,7 @@ func New(configurations ...Configuration) (Client, error) {
 	}, nil
 }
 
+// NewDefaultClient returns a Client with default settings
 func NewDefaultClient() Client {
 
 	client, err := New()
@@ -82,6 +85,7 @@ type client struct {
 	*Configuration
 }
 
+// SimpleLookup returns all word matches for the designated parameters.
 func (c *client) SimpleLookup(digits string, exact bool) ([]string, error) {
 
 	request := &proto.LookupRequest{

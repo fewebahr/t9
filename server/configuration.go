@@ -9,6 +9,7 @@ import (
 	"github.com/RobertGrantEllis/t9/logger"
 )
 
+// Configuration encapsulates all configurable parameters of a Server
 type Configuration struct {
 	LogLevel string
 
@@ -22,6 +23,7 @@ type Configuration struct {
 	CacheSize int
 }
 
+// NewConfiguration instantiates a Configuration with default settings.
 func NewConfiguration() Configuration {
 
 	return Configuration{

@@ -9,31 +9,31 @@ import (
 	"github.com/RobertGrantEllis/t9/logger"
 )
 
-type goHttpServer interface {
+type goHTTPServer interface {
 	Serve(net.Listener) error
 	Shutdown(context.Context) error
 }
 
-func (s *server) instantiateGoHttpServer() {
+func (s *server) instantiateGoHTTPServer() {
 
 	s.httpServer = &http.Server{
-		Handler:  http.HandlerFunc(s.handleHttpRequest),
+		Handler:  http.HandlerFunc(s.handleHTTPRequest),
 		ErrorLog: s.logger.GetLogger(logger.ErrorLevel),
 	}
 }
 
-func (s *server) handleHttpRequest(rw http.ResponseWriter, req *http.Request) {
+func (s *server) handleHTTPRequest(rw http.ResponseWriter, req *http.Request) {
 
 	isGrpcRequest := req.ProtoMajor == 2 && strings.Contains(req.Header.Get(`Content-Type`), `application/grpc`)
-	isRestfulApiRequest := strings.HasPrefix(req.URL.Path, `/api/`)
+	isRestfulAPIRequest := strings.HasPrefix(req.URL.Path, `/api/`)
 
 	handler := s.frontendHandler
 
 	switch {
 	case isGrpcRequest:
 		handler = s.grpcHandler
-	case isRestfulApiRequest:
-		handler = s.restfulApiHandler
+	case isRestfulAPIRequest:
+		handler = s.restfulAPIHandler
 	}
 
 	handler.ServeHTTP(rw, req)

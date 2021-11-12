@@ -72,8 +72,6 @@ $ t9 client
 * Use new go errors
 * Unit tests
 * Consider adopting zap for faster logging
-* Update to use native go binary asset embedding
-* Update frontend to use vanilla js instead of jquery and semantic
 * Support Brotli (once there is native, pure-go support)
 
 ## Etc.

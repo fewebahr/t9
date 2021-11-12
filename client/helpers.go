@@ -6,10 +6,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/RobertGrantEllis/t9/bindata"
+	"github.com/RobertGrantEllis/t9/assets"
 )
 
-func getClientTlsConfig() (*tls.Config, error) {
+func getClientTLSConfig() (*tls.Config, error) {
 
 	certPool, err := getCertPool()
 	if err != nil {
@@ -24,17 +24,12 @@ func getClientTlsConfig() (*tls.Config, error) {
 
 func getCertPool() (*x509.CertPool, error) {
 
-	certPEM, err := bindata.Asset(`cert.pem`)
-	if err != nil {
-		return nil, errors.Wrap(err, `could not read embedded certificate`)
-	}
-
 	pool, err := x509.SystemCertPool()
 	if err != nil {
 		return nil, errors.Wrap(err, `could not get system certificate pool`)
 	}
 
-	pool.AppendCertsFromPEM(certPEM)
+	pool.AppendCertsFromPEM(assets.Cert)
 
 	return pool, nil
 }
