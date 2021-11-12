@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 
-	"github.com/RobertGrantEllis/t9/bindata"
+	"github.com/RobertGrantEllis/t9/assets"
 	"github.com/RobertGrantEllis/t9/proto"
 	"github.com/RobertGrantEllis/t9/service"
 	"github.com/RobertGrantEllis/t9/t9"
@@ -33,12 +33,7 @@ func (s *server) instantiateAndRegisterGrpcHandler() error {
 
 func (s *server) getLoadedT9() (t9.T9, error) {
 
-	dictionaryFile := s.configuration.DictionaryFile
-	if len(dictionaryFile) == 0 {
-		dictionaryFile = `english.txt`
-	}
-
-	dictionaryReader, err := getDictionaryReader(dictionaryFile)
+	dictionaryReader, err := getDictionaryReader(s.configuration.DictionaryFile)
 	if err != nil {
 		return nil, err
 	}
@@ -77,12 +72,10 @@ func (s *server) getLoadedT9() (t9.T9, error) {
 
 func getDictionaryReader(dictionaryFile string) (io.Reader, error) {
 
-	dictionaryBuffer, err := bindata.Asset(dictionaryFile)
-	if err == nil {
-		return bytes.NewReader(dictionaryBuffer), nil
+	if dictionaryFile == "" {
+		return bytes.NewReader(assets.Dictionary), nil
 	}
 
-	// couldn't find embedded in binary so try filesystem
 	file, err := os.Open(dictionaryFile)
 	if err != nil {
 		return nil, errors.Wrap(err, `could not open dictionary file for reading`)

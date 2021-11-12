@@ -9,11 +9,13 @@ import (
 	"github.com/RobertGrantEllis/t9/logger"
 )
 
+// Server is an interface with simple methods to start or stop a T9 server.
 type Server interface {
 	Start()
 	Stop()
 }
 
+// New instantiates a server using the designated Configuration, or an error if the configuration is invalid.
 func New(configuration Configuration) (Server, error) {
 
 	if err := configuration.normalize(); err != nil {
@@ -30,14 +32,14 @@ type server struct {
 	configuration     Configuration
 	logger            logger.Logger
 	grpcHandler       http.Handler
-	restfulApiHandler http.Handler
+	restfulAPIHandler http.Handler
 	frontendHandler   http.Handler
-	httpServer        goHttpServer
+	httpServer        goHTTPServer
 }
 
 func (s *server) Start() {
 
-	tlsConfig, err := s.getTlsConfig()
+	tlsConfig, err := s.getTLSConfig()
 	if err != nil {
 		s.logger.Error(err)
 		return
@@ -67,7 +69,7 @@ func (s *server) Start() {
 		return
 	}
 
-	s.instantiateGoHttpServer()
+	s.instantiateGoHTTPServer()
 
 	s.logger.Infof(`server listening on https://%s/`, s.configuration.Address)
 	if err := s.httpServer.Serve(listener); err != nil && err != http.ErrServerClosed {

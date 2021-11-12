@@ -2,19 +2,21 @@ package server
 
 import (
 	"crypto/tls"
+	"fmt"
 	"io/ioutil"
 
+	"github.com/RobertGrantEllis/t9/assets"
 	"github.com/pkg/errors"
-
-	"github.com/RobertGrantEllis/t9/bindata"
 )
 
-func (s *server) getTlsConfig() (*tls.Config, error) {
+func (s *server) getTLSConfig() (*tls.Config, error) {
 
 	embeddedCertificate, err := getEmbeddedCertificate()
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("got embedded certificate")
 
 	// for now, assume no certificates are configured
 	getCertificate := func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -25,6 +27,7 @@ func (s *server) getTlsConfig() (*tls.Config, error) {
 	}
 
 	if len(s.configuration.CertificateFile) > 0 {
+		fmt.Println("certificate file designated")
 		// keyfile is also designated since the configuration normalization checks
 		designatedCertificate, err := getDesignatedCertificate(
 			s.configuration.CertificateFile,
@@ -33,6 +36,8 @@ func (s *server) getTlsConfig() (*tls.Config, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		fmt.Println("got designated certificate")
 
 		// a certificate was designated, so override the getCertificate function
 		getCertificate = func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -66,39 +71,30 @@ func (s *server) getTlsConfig() (*tls.Config, error) {
 
 func getDesignatedCertificate(certFile, keyFile string) (*tls.Certificate, error) {
 
-	tlsCert, err := getCertificate(ioutil.ReadFile, certFile, keyFile)
-	if err != nil {
-		return nil, errors.Wrap(err, `could not process designated certificate`)
-	}
-
-	return tlsCert, nil
-}
-
-func getEmbeddedCertificate() (*tls.Certificate, error) {
-
-	tlsCert, err := getCertificate(bindata.Asset, `cert.pem`, `key.pem`)
-	if err != nil {
-		return nil, errors.Wrap(err, `could not process embedded certificate`)
-	}
-
-	return tlsCert, nil
-}
-
-type bufferGetter func(string) ([]byte, error)
-
-func getCertificate(getter bufferGetter, certFile, keyFile string) (*tls.Certificate, error) {
-
-	certBuf, err := getter(certFile)
+	certBuf, err := ioutil.ReadFile(certFile)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	keyBuf, err := getter(keyFile)
+	keyBuf, err := ioutil.ReadFile(keyFile)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
 	tlsCert, err := tls.X509KeyPair(certBuf, keyBuf)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return &tlsCert, nil
+}
+
+func getEmbeddedCertificate() (*tls.Certificate, error) {
+
+	fmt.Printf("cert:\n%s\n", assets.Cert)
+	fmt.Printf("key:\n%s\n", assets.Key)
+
+	tlsCert, err := tls.X509KeyPair(assets.Cert, assets.Key)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

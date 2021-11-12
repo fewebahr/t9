@@ -22,13 +22,11 @@ tools:
 		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
 		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
 		github.com/golang/protobuf/protoc-gen-go \
-		github.com/jteeuwen/go-bindata/... \
-		github.com/golang/mock/{gomock,mockgen}
 gen:
 	# the following makefiles have their own dependencies. See comments in each one.
 	$(MAKE) -C frontend
-	rm -rf bindata/frontend && cp -R frontend/dist bindata/frontend
-	$(MAKE) -C bindata
+	rm -rf assets/frontend && cp -R frontend/dist assets/frontend
+	$(MAKE) -C assets
 	$(MAKE) -C proto
 	$(GOFMT) ./...
 test: 
@@ -39,7 +37,7 @@ clean:
 	$(GOCLEAN) -v
 	$(RM) -rf $(BINARY_LINUX) vendor output
 	$(MAKE) -C frontend clean
-	$(MAKE) -C bindata clean
+	$(MAKE) -C assets clean
 	$(MAKE) -C proto clean
 
 linux: gen test
