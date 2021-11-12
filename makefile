@@ -21,7 +21,7 @@ tools:
 	$(GOINSTALL) \
 		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
 		github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
-		github.com/golang/protobuf/protoc-gen-go \
+		github.com/golang/protobuf/protoc-gen-go
 gen:
 	# the following makefiles have their own dependencies. See comments in each one.
 	$(MAKE) -C frontend

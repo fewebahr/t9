@@ -106,7 +106,6 @@ export class t9Controller {
     }
 
     #userEvent = () => {
-        console.log("processing event)")
         const digits = this.#digitsInput.value
         const exactOnly = this.#prefixDropdown.value !== 'prefix'
 
