@@ -3,7 +3,6 @@ package client
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"fmt"
 
 	"github.com/pkg/errors"
 
@@ -29,8 +28,6 @@ func getCertPool() (*x509.CertPool, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, `could not get system certificate pool`)
 	}
-
-	fmt.Printf("adding certificate to trusted pool:\n%s\n", assets.Cert)
 
 	pool.AppendCertsFromPEM(assets.Cert)
 

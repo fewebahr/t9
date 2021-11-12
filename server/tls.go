@@ -2,7 +2,6 @@ package server
 
 import (
 	"crypto/tls"
-	"fmt"
 	"io/ioutil"
 
 	"github.com/RobertGrantEllis/t9/assets"
@@ -16,8 +15,6 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 		return nil, err
 	}
 
-	fmt.Println("got embedded certificate")
-
 	// for now, assume no certificates are configured
 	getCertificate := func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 
@@ -27,7 +24,6 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 	}
 
 	if len(s.configuration.CertificateFile) > 0 {
-		fmt.Println("certificate file designated")
 		// keyfile is also designated since the configuration normalization checks
 		designatedCertificate, err := getDesignatedCertificate(
 			s.configuration.CertificateFile,
@@ -36,8 +32,6 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 		if err != nil {
 			return nil, err
 		}
-
-		fmt.Println("got designated certificate")
 
 		// a certificate was designated, so override the getCertificate function
 		getCertificate = func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -90,9 +84,6 @@ func getDesignatedCertificate(certFile, keyFile string) (*tls.Certificate, error
 }
 
 func getEmbeddedCertificate() (*tls.Certificate, error) {
-
-	fmt.Printf("cert:\n%s\n", assets.Cert)
-	fmt.Printf("key:\n%s\n", assets.Key)
 
 	tlsCert, err := tls.X509KeyPair(assets.Cert, assets.Key)
 	if err != nil {
