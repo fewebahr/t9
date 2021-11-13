@@ -23,7 +23,30 @@
   <meta name="msapplication-square150x150logo" content="/favicon/mstile-150x150.png" />
   <meta name="msapplication-wide310x150logo" content="/favicon/mstile-310x150.png" />
   <meta name="msapplication-square310x310logo" content="/favicon/mstile-310x310.png" />
+  <link rel="stylesheet" type="text/css" href="/style.css">
   <script type="module" src="/main.js"></script>
 </head>
+<body>
 
+<div class="u-full-width">
+
+  <div>
+    <h1>T9 Demo</h1>
+  </div>
+
+  <div>
+    <input id="digits" type="text" placeholder="Enter digits 2...9">
+    <select id="prefix">
+      <option selected="" value="prefix">Match by prefix</option>
+      <option value="exact">Exact matches only</option>
+    </select>
+  </div>
+
+  <div id="message" class="hidden"></div>
+
+  <div id="results" class="hidden"></div>
+
+</div>
+
+</body>
 </html>
