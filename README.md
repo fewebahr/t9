@@ -1,6 +1,6 @@
 # T9
 
-This is my reference implementation of a [T9](https://en.wikipedia.org/wiki/T9_\(predictive_text\)) server and client. There is particular emphasis on modularity with clear boundaries, reliability, and performance.
+This is my reference implementation of a [T9](https://en.wikipedia.org/wiki/T9_\(predictive_text\)) server. There is particular emphasis on modularity with clear boundaries, reliability, and performance.
 
 ## Building
 
@@ -52,17 +52,11 @@ $ make clean
 On your local machine after local installation, run the server by typing:
 
 ```shell
-$ t9 server
+$ t9
 info  2020/05/11 14:31:03 server listening on https://127.0.0.1:4239/
 ```
 
-While the server is running you may either:
-* Direct your browser to the address specified (**warning**: if you used the default command-line flags as in example above, expect an untrusted certificate warning.)
-* Run the CLI client by typing:
-
-```shell
-$ t9 client
-```
+While the server is running you may direct your browser to the address specified (**warning**: if you used the default command-line flags as in example above, expect an untrusted certificate warning.)
 
 ## TODO
 
