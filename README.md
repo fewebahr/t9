@@ -67,7 +67,6 @@ $ t9 client
 ## TODO
 
 * Support lets-encrypt?
-* Use false in-memory piping between GRPC client and server
 * Add cache-control/expires headers
 * Use new go errors
 * Unit tests

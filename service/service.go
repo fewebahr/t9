@@ -10,10 +10,12 @@ import (
 	"github.com/RobertGrantEllis/t9/t9"
 )
 
+// Service implements proto.T9Server
 type Service interface {
 	proto.T9Server
 }
 
+// New returns a Server based on the designated t9.T9 and logger.Logger.
 func New(t9 t9.T9, logger logger.Logger) Service {
 
 	return &service{
@@ -37,7 +39,7 @@ func (service *service) Lookup(ctx context.Context, request *proto.LookupRequest
 
 	start := time.Now()
 	words, err := service.t9.GetWords(request.Digits, request.Exact)
-	turnAroundTime := time.Now().Sub(start)
+	turnAroundTime := time.Since(start)
 
 	if err != nil {
 		response.Status = false

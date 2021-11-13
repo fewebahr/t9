@@ -12,10 +12,10 @@ import (
 type goHTTPServer interface {
 	Serve(net.Listener) error
 	Shutdown(context.Context) error
+	Close() error
 }
 
 func (s *server) instantiateGoHTTPServer() {
-
 	s.httpServer = &http.Server{
 		Handler:  http.HandlerFunc(s.handleHTTPRequest),
 		ErrorLog: s.logger.GetLogger(logger.ErrorLevel),
@@ -23,17 +23,18 @@ func (s *server) instantiateGoHTTPServer() {
 }
 
 func (s *server) handleHTTPRequest(rw http.ResponseWriter, req *http.Request) {
-
 	isGrpcRequest := req.ProtoMajor == 2 && strings.Contains(req.Header.Get(`Content-Type`), `application/grpc`)
 	isRestfulAPIRequest := strings.HasPrefix(req.URL.Path, `/api/`)
 
-	handler := s.frontendHandler
-
+	var handler http.Handler
 	switch {
 	case isGrpcRequest:
 		handler = s.grpcHandler
 	case isRestfulAPIRequest:
 		handler = s.restfulAPIHandler
+	default:
+		// frontend request
+		handler = s.frontendHandler
 	}
 
 	handler.ServeHTTP(rw, req)

@@ -2,9 +2,13 @@ package server
 
 import (
 	"context"
+	"crypto/tls"
+	"net"
 	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
+	"gitlab.com/fubahr/pipe"
 
 	"github.com/RobertGrantEllis/t9/logger"
 )
@@ -38,48 +42,73 @@ type server struct {
 }
 
 func (s *server) Start() {
-
-	tlsConfig, err := s.getTLSConfig()
-	if err != nil {
+	if err := s.composeAndStart(); err != nil {
 		s.logger.Error(err)
-		return
-	}
-
-	listener, err := s.getListener(tlsConfig)
-	if err != nil {
-		s.logger.Error(err)
-		return
-	}
-
-	err = s.instantiateAndRegisterGrpcHandler()
-	if err != nil {
-		s.logger.Error(err)
-		return
-	}
-
-	err = s.instantiateAndRegisterRestfulHandler()
-	if err != nil {
-		s.logger.Error(err)
-		return
-	}
-
-	err = s.instantiateFrontendHandler()
-	if err != nil {
-		s.logger.Error(err)
-		return
-	}
-
-	s.instantiateGoHTTPServer()
-
-	s.logger.Infof(`server listening on https://%s/`, s.configuration.Address)
-	if err := s.httpServer.Serve(listener); err != nil && err != http.ErrServerClosed {
-		s.logger.Error(errors.Wrap(err, `server terminated unexpectedly`))
-	} else {
-		s.logger.Info(`server stopped`)
 	}
 }
 
-func (s *server) Stop() {
+func (s *server) composeAndStart() error {
 
-	s.httpServer.Shutdown(context.Background())
+	// configure a TLS configuration, suitable for both server-side and client-side
+	tlsConfig, err := s.getTLSConfig()
+	if err != nil {
+		return err
+	}
+
+	/*
+		Instantiate all required listeners
+	*/
+
+	pipeListener := pipe.Listen() // in-memory pipes suitable for GRPC gateway
+
+	// TCP listener for requests from frontend or other API consumers
+	tcpListener, err := net.Listen(`tcp`, s.configuration.Address)
+	if err != nil {
+		return errors.Wrap(err, `could not instantiate TCP listener`)
+	}
+
+	// GRPC service must listen on both in-memory pipe and TCP listener (for RPC consumers)
+	teeListener := pipe.TeeListener(pipeListener, tcpListener)
+
+	// TLS is required for both
+	tlsListener := tls.NewListener(teeListener, tlsConfig)
+	defer tlsListener.Close() // will close all underlying listeners
+
+	/*
+		Instantiate all handlers for frontend, GRPC methods, and restful methods
+	*/
+	if err := s.instantiateFrontendHandler(); err != nil {
+		return err
+	}
+
+	if err := s.instantiateAndRegisterGrpcHandler(); err != nil {
+		return err
+	}
+
+	if err := s.instantiateAndRegisterRestfulHandler(pipeListener, tlsConfig); err != nil {
+		return err
+	}
+
+	// Instantiate the HTTP server which will handle all types of requests
+	s.instantiateGoHTTPServer()
+
+	// Start serving the listeners
+	s.logger.Infof(`server listening on https://%s/`, s.configuration.Address)
+	if err := s.httpServer.Serve(tlsListener); err != nil && err != http.ErrServerClosed {
+		return errors.Wrap(err, `server terminated unexpectedly`)
+	}
+
+	s.logger.Info(`server stopped`)
+	return nil
+}
+
+const serverShutdownTimeout = 10 * time.Second
+
+func (s *server) Stop() {
+	ctx, cancel := context.WithTimeout(context.Background(), serverShutdownTimeout)
+	defer cancel()
+	if err := s.httpServer.Shutdown(ctx); err != nil {
+		s.logger.Errorf("server shutdown failed after %s: force closing", serverShutdownTimeout)
+		s.httpServer.Close()
+	}
 }

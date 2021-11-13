@@ -8,8 +8,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Level expresses a logging level
 type Level uint
 
+// Available log levels
 const (
 	DebugLevel Level = iota
 	InfoLevel
@@ -17,6 +19,7 @@ const (
 	ErrorLevel
 )
 
+// ParseLevel turns the designated string into a log level or returns an error.
 func ParseLevel(levelStr string) (Level, error) {
 
 	switch levelStr {

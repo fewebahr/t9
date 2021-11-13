@@ -2,6 +2,7 @@ package server
 
 import (
 	"crypto/tls"
+	"crypto/x509"
 	"io/ioutil"
 
 	"github.com/RobertGrantEllis/t9/assets"
@@ -10,6 +11,13 @@ import (
 
 func (s *server) getTLSConfig() (*tls.Config, error) {
 
+	certPool, err := x509.SystemCertPool()
+	if err != nil {
+		return nil, errors.Wrap(err, `could not get system certificate pool`)
+	}
+
+	certPool.AppendCertsFromPEM(assets.Cert)
+
 	embeddedCertificate, err := getEmbeddedCertificate()
 	if err != nil {
 		return nil, err
@@ -17,7 +25,6 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 
 	// for now, assume no certificates are configured
 	getCertificate := func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
-
 		// since this version of the function assumes no other certificates are
 		// designated, simply return the embedded certificate
 		return embeddedCertificate, nil
@@ -47,6 +54,8 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 	}
 
 	tlsConfig := &tls.Config{
+		ServerName:               "t9",
+		RootCAs:                  certPool,
 		NextProtos:               []string{`h2`, `http/1.1`},
 		GetCertificate:           getCertificate,
 		MinVersion:               tls.VersionTLS12,

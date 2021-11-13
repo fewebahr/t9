@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// Logger offers various methods for logging information to the console
 type Logger interface {
 	SetLevel(Level)
 
@@ -27,6 +28,7 @@ type Logger interface {
 	GetLogger(Level) *log.Logger
 }
 
+// New returns a Logger at the designated Level.
 func New(l Level) Logger {
 
 	return &levelLogger{
