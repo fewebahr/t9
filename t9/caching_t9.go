@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	lru "github.com/hashicorp/golang-lru"
-	"github.com/pkg/errors"
 )
 
 // NewCachingT9 instantiates a new T9 structure that caches lookup results using an LRU cache
@@ -12,7 +11,7 @@ import (
 func NewCachingT9(cacheSize int) (T9, error) {
 	cache, err := lru.New(cacheSize)
 	if err != nil {
-		return nil, errors.Wrap(err, `could not instantiate LRU cache`)
+		return nil, fmt.Errorf(`could not instantiate LRU cache: %w`, err)
 	}
 
 	return &cachingT9{

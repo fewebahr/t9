@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/pkg/errors"
 )
 
 // Level expresses a logging level
@@ -31,7 +30,7 @@ func ParseLevel(levelStr string) (Level, error) {
 	case ErrorLevel.String():
 		return ErrorLevel, nil
 	default:
-		return InfoLevel, errors.Errorf(`must be %s|%s|%s|%s (received '%s')`,
+		return InfoLevel, fmt.Errorf(`must be %s|%s|%s|%s (received '%s')`,
 			DebugLevel, InfoLevel, WarnLevel, ErrorLevel, levelStr)
 	}
 }

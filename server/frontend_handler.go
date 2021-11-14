@@ -2,13 +2,12 @@ package server
 
 import (
 	"compress/gzip"
+	"errors"
 	"io"
 	"mime"
 	"net/http"
 	"path/filepath"
 	"strings"
-
-	"github.com/pkg/errors"
 
 	"github.com/RobertGrantEllis/t9/assets"
 )
@@ -62,17 +61,15 @@ func getFrontendPath(path string) (string, error) {
 }
 
 func getEmbeddedFrontendFileReader(path string) (io.Reader, error) {
-
 	data, err := assets.Frontend.Open(path)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	return data, nil
 }
 
 func addContentTypeHeaderForPath(rw http.ResponseWriter, path string) {
-
 	extension := filepath.Ext(path)
 	contentType := mime.TypeByExtension(extension)
 

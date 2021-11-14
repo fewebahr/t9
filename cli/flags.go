@@ -1,12 +1,11 @@
 package cli
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
-
-	"github.com/pkg/errors"
 
 	"github.com/RobertGrantEllis/t9/server"
 )
@@ -50,7 +49,7 @@ func addHelpAndParse(fs *flag.FlagSet, args ...string) {
 	if err != nil && err != flag.ErrHelp {
 		printHelp(fs, err)
 	} else if fs.NArg() != 0 {
-		printHelp(fs, errors.Errorf(`unexpected argument: '%s'`, fs.Arg(0)))
+		printHelp(fs, fmt.Errorf(`unexpected argument: '%s'`, fs.Arg(0)))
 	} else if help || err == flag.ErrHelp {
 		printHelp(fs, nil)
 	}

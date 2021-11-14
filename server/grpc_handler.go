@@ -3,12 +3,12 @@ package server
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"strings"
 
-	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 
 	"github.com/RobertGrantEllis/t9/assets"
@@ -59,7 +59,7 @@ func (s *server) getLoadedT9() (t9.T9, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	return t9, nil
@@ -73,7 +73,7 @@ func getDictionaryReader(dictionaryFile string) (io.ReadCloser, error) {
 
 	file, err := os.Open(dictionaryFile)
 	if err != nil {
-		return nil, errors.Wrap(err, `could not open dictionary file for reading`)
+		return nil, fmt.Errorf(`could not open dictionary file for reading: %w`, err)
 	}
 
 	return file, nil

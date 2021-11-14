@@ -3,24 +3,24 @@ package server
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"io/ioutil"
 
 	"github.com/RobertGrantEllis/t9/assets"
-	"github.com/pkg/errors"
 )
 
 func (s *server) getTLSConfig() (*tls.Config, error) {
 
 	certPool, err := x509.SystemCertPool()
 	if err != nil {
-		return nil, errors.Wrap(err, `could not get system certificate pool`)
+		return nil, fmt.Errorf(`could not get system certificate pool: %w`, err)
 	}
 
 	certPool.AppendCertsFromPEM(assets.Cert)
 
 	embeddedCertificate, err := tls.X509KeyPair(assets.Cert, assets.Key)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("could not use embedded certificate and key: %w", err)
 	}
 
 	// for now, assume no certificates are configured
@@ -37,7 +37,7 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 			s.configuration.KeyFile,
 		)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("could not load designated certificate and key: %w", err)
 		}
 
 		// a certificate was designated, so override the getCertificate function
@@ -76,17 +76,17 @@ func getDesignatedCertificate(certFile, keyFile string) (*tls.Certificate, error
 
 	certBuf, err := ioutil.ReadFile(certFile)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	keyBuf, err := ioutil.ReadFile(keyFile)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	tlsCert, err := tls.X509KeyPair(certBuf, keyBuf)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	return &tlsCert, nil

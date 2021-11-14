@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/pkg/errors"
 	"gitlab.com/fubahr/pipe"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -23,7 +23,7 @@ func (s *server) instantiateAndRegisterRestfulHandler(pipeListener pipe.Listener
 	)
 	if err != nil {
 		// should never happen
-		return errors.Wrap(err, `could not dial to in-memory pipe listener`)
+		return fmt.Errorf(`could not dial to in-memory pipe listener: %w`, err)
 	}
 
 	// default settings are totally fine since this is an in-memory connection

@@ -2,7 +2,7 @@
 package t9
 
 import (
-	"github.com/pkg/errors"
+	"errors"
 )
 
 // T9 interface enables insertion of any dictionary word and then retrieval based on a prefix or exact-only

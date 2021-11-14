@@ -1,10 +1,10 @@
 package server
 
 import (
+	"errors"
+	"fmt"
 	"net"
 	"strings"
-
-	"github.com/pkg/errors"
 
 	"github.com/RobertGrantEllis/t9/logger"
 )
@@ -43,19 +43,19 @@ func (configuration *Configuration) normalize() error {
 	if len(configuration.LogLevel) == 0 {
 		configuration.LogLevel = logLevelDefault
 	} else if _, err := logger.ParseLevel(configuration.LogLevel); err != nil {
-		return errors.Wrap(err, `invalid log level`)
+		return fmt.Errorf("invalid log level: %w", err)
 	}
 
 	if len(configuration.Address) == 0 {
 		configuration.Address = listenerAddressDefault
 	} else if _, _, err := net.SplitHostPort(configuration.Address); err != nil {
-		return errors.Wrap(err, `invalid address`)
+		return fmt.Errorf(`invalid address: %w`, err)
 	}
 
 	if configuration.CacheSize == 0 {
 		configuration.CacheSize = cacheSizeDefault
 	} else if configuration.CacheSize < 0 {
-		return errors.Errorf(`invalid cache size (received %d)`, configuration.CacheSize)
+		return fmt.Errorf(`invalid cache size (received %d)`, configuration.CacheSize)
 	}
 
 	configuration.CertificateFile = strings.TrimSpace(configuration.CertificateFile)

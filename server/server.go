@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"net"
 	"net/http"
 	"time"
 
-	"github.com/pkg/errors"
 	"gitlab.com/fubahr/pipe"
 
 	"github.com/RobertGrantEllis/t9/logger"
@@ -22,7 +22,7 @@ type Server interface {
 // New instantiates a server using the designated Configuration, or an error if the configuration is invalid.
 func New(configuration Configuration) (Server, error) {
 	if err := configuration.normalize(); err != nil {
-		return nil, errors.Wrap(err, `cannot instantiate service`)
+		return nil, fmt.Errorf(`cannot instantiate service: %w`, err)
 	}
 
 	return &server{
@@ -62,7 +62,7 @@ func (s *server) composeAndStart() error {
 	// TCP listener for requests from frontend or other API consumers
 	tcpListener, err := net.Listen(`tcp`, s.configuration.Address)
 	if err != nil {
-		return errors.Wrap(err, `could not instantiate TCP listener`)
+		return fmt.Errorf(`could not instantiate TCP listener: %w`, err)
 	}
 
 	// GRPC service must listen on both in-memory pipe and TCP listener (for RPC consumers)
@@ -93,7 +93,7 @@ func (s *server) composeAndStart() error {
 	// Start serving the listeners
 	s.logger.Infof(`server listening on https://%s/`, s.configuration.Address)
 	if err := s.httpServer.Serve(tlsListener); err != nil && err != http.ErrServerClosed {
-		return errors.Wrap(err, `server terminated unexpectedly`)
+		return fmt.Errorf(`server terminated unexpectedly: %w`, err)
 	}
 
 	s.logger.Info(`server stopped`)

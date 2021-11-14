@@ -7,7 +7,6 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/hashicorp/golang-lru v0.0.0-20180201235237-0fb14efe8c47
-	github.com/pkg/errors v0.8.0
 	gitlab.com/fubahr/pipe v0.0.0-20211113190742-79e9940be738
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013

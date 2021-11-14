@@ -62,7 +62,6 @@ While the server is running you may direct your browser to the address specified
 
 * Support lets-encrypt?
 * Add cache-control/expires headers
-* Use new go errors
 * Unit tests
 * Consider adopting zap for faster logging
 * Support Brotli (once there is native, pure-go support)

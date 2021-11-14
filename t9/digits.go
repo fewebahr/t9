@@ -1,10 +1,10 @@
 package t9
 
 import (
+	"errors"
+	"fmt"
 	"regexp"
 	"unicode"
-
-	"github.com/pkg/errors"
 )
 
 var (
@@ -16,7 +16,7 @@ func CheckDigits(digits string) error {
 	if len(digits) == 0 {
 		return errors.New(`digits are empty`)
 	} else if !validDigits.MatchString(digits) {
-		return errors.Errorf(`digits are invalid (received :'%s')`, digits)
+		return fmt.Errorf(`digits are invalid (received :'%s')`, digits)
 	}
 
 	return nil
