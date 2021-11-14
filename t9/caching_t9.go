@@ -3,14 +3,13 @@ package t9
 import (
 	"fmt"
 
-	"github.com/hashicorp/golang-lru"
+	lru "github.com/hashicorp/golang-lru"
 	"github.com/pkg/errors"
 )
 
 // NewCachingT9 instantiates a new T9 structure that caches lookup results using an LRU cache
 // of the designated maximum size.
 func NewCachingT9(cacheSize int) (T9, error) {
-
 	cache, err := lru.New(cacheSize)
 	if err != nil {
 		return nil, errors.Wrap(err, `could not instantiate LRU cache`)
@@ -28,7 +27,6 @@ type cachingT9 struct {
 }
 
 func (t9 *cachingT9) GetWords(digits string, exact bool) ([]string, error) {
-
 	cacheKey := fmt.Sprintf(`digits=%s | exact=%t`, digits, exact)
 
 	if wordsInterface, ok := t9.cache.Get(cacheKey); ok {

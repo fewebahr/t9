@@ -5,19 +5,16 @@ type trie struct {
 }
 
 func newTrie() *trie {
-
 	return &trie{
 		root: newBranch('0'),
 	}
 }
 
 func (t *trie) addWord(key []rune, word string) {
-
 	t._getBranch(t.root, key, true).addWord(word)
 }
 
 func (t *trie) getWords(key []rune, exact bool) []string {
-
 	exactMatchBranch := t._getBranch(t.root, key, false)
 	if exactMatchBranch == nil {
 		return nil
@@ -30,7 +27,6 @@ func (t *trie) getWords(key []rune, exact bool) []string {
 }
 
 func (t *trie) _getBranch(b *branch, key []rune, addIfNecessary bool) *branch {
-
 	if len(key) == 0 {
 		return b
 	}
@@ -52,7 +48,6 @@ func (t *trie) _getBranch(b *branch, key []rune, addIfNecessary bool) *branch {
 }
 
 func (t *trie) _getDescendantWords(b *branch) []string {
-
 	words := b.getWords()
 
 	for _, child := range b.getChildren() {

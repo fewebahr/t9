@@ -23,9 +23,14 @@ type Configuration struct {
 	CacheSize int
 }
 
+const (
+	logLevelDefault        = `info`
+	listenerAddressDefault = `127.0.0.1:4239`
+	cacheSizeDefault       = 16 * 1024
+)
+
 // NewConfiguration instantiates a Configuration with default settings.
 func NewConfiguration() Configuration {
-
 	return Configuration{
 		LogLevel:  logLevelDefault,
 		Address:   listenerAddressDefault,

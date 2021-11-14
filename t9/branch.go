@@ -16,7 +16,6 @@ type branch struct {
 }
 
 func newBranch(digit rune, words ...string) *branch {
-
 	return &branch{
 		digit:         digit,
 		childrenSlice: make([]*branch, 0),
@@ -28,7 +27,6 @@ func newBranch(digit rune, words ...string) *branch {
 }
 
 func (b *branch) addChild(child *branch) {
-
 	b.childrenMutex.Lock()
 	b.childrenSlice = append(b.childrenSlice, child)
 	b.childrenMap[child.digit] = child
@@ -36,7 +34,6 @@ func (b *branch) addChild(child *branch) {
 }
 
 func (b *branch) getChildren() []*branch {
-
 	b.childrenMutex.RLock()
 	children := b.childrenSlice
 	b.childrenMutex.RUnlock()
@@ -45,7 +42,6 @@ func (b *branch) getChildren() []*branch {
 }
 
 func (b *branch) getChild(digit rune) *branch {
-
 	b.childrenMutex.RLock()
 	child := b.childrenMap[digit]
 	b.childrenMutex.RUnlock()
@@ -54,7 +50,6 @@ func (b *branch) getChild(digit rune) *branch {
 }
 
 func (b *branch) getOrAddChild(digit rune) *branch {
-
 	b.childrenMutex.Lock()
 	child := b.childrenMap[digit]
 	if child == nil {
@@ -68,14 +63,12 @@ func (b *branch) getOrAddChild(digit rune) *branch {
 }
 
 func (b *branch) addWord(word string) {
-
 	b.wordsMutex.Lock()
 	b.words = append(b.words, word)
 	b.wordsMutex.Unlock()
 }
 
 func (b *branch) getWords() []string {
-
 	b.wordsMutex.RLock()
 	words := b.words
 	b.wordsMutex.RUnlock()

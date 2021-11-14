@@ -9,6 +9,7 @@ import (
 	"github.com/RobertGrantEllis/t9/logger"
 )
 
+// goHTTPServer is concretely implemented by *http.Server
 type goHTTPServer interface {
 	Serve(net.Listener) error
 	Shutdown(context.Context) error
@@ -32,8 +33,7 @@ func (s *server) handleHTTPRequest(rw http.ResponseWriter, req *http.Request) {
 		handler = s.grpcHandler
 	case isRestfulAPIRequest:
 		handler = s.restfulAPIHandler
-	default:
-		// frontend request
+	default: // frontend request
 		handler = s.frontendHandler
 	}
 

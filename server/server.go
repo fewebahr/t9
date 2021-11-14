@@ -21,7 +21,6 @@ type Server interface {
 
 // New instantiates a server using the designated Configuration, or an error if the configuration is invalid.
 func New(configuration Configuration) (Server, error) {
-
 	if err := configuration.normalize(); err != nil {
 		return nil, errors.Wrap(err, `cannot instantiate service`)
 	}
@@ -48,7 +47,6 @@ func (s *server) Start() {
 }
 
 func (s *server) composeAndStart() error {
-
 	// configure a TLS configuration, suitable for both server-side and client-side
 	tlsConfig, err := s.getTLSConfig()
 	if err != nil {

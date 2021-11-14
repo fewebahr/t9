@@ -8,7 +8,6 @@ import (
 // T9 interface enables insertion of any dictionary word and then retrieval based on a prefix or exact-only
 // match of t9 digits.
 type T9 interface {
-
 	// Inserts a dictionary word into t9 lookup structure.
 	InsertWord(word string) error
 
@@ -19,7 +18,6 @@ type T9 interface {
 
 // New instantiates a new T9 structure.
 func New() T9 {
-
 	return &t9{
 		trie: newTrie(),
 	}
@@ -30,7 +28,6 @@ type t9 struct {
 }
 
 func (t9 *t9) InsertWord(word string) error {
-
 	if len(word) == 0 {
 		return errors.New(`word is empty`)
 	}
@@ -41,7 +38,6 @@ func (t9 *t9) InsertWord(word string) error {
 }
 
 func (t9 *t9) GetWords(digits string, exact bool) ([]string, error) {
-
 	if err := CheckDigits(digits); err != nil {
 		return nil, err
 	}

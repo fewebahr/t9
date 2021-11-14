@@ -14,7 +14,6 @@ import (
 )
 
 func (s *server) instantiateAndRegisterRestfulHandler(pipeListener pipe.Listener, tlsConfig *tls.Config) error {
-
 	creds := credentials.NewTLS(tlsConfig)
 	conn, err := grpc.DialContext(
 		context.Background(),                 // not a real connection so a timeout will never happen and background context is fine

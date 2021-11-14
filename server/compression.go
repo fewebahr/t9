@@ -10,9 +10,7 @@ import (
 )
 
 func enableCompression(inner http.Handler, level int) http.Handler {
-
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
 		compressor := newResponseCompressor(rw, req, level)
 		inner.ServeHTTP(compressor, req)
 		compressor.Close()
@@ -63,13 +61,11 @@ func newResponseCompressor(rw http.ResponseWriter, req *http.Request, level int)
 }
 
 func (rc *responseCompressor) WriteHeader(code int) {
-
 	rc.ResponseWriter.Header().Del("Content-Length")
 	rc.ResponseWriter.WriteHeader(code)
 }
 
 func (rc *responseCompressor) Write(b []byte) (int, error) {
-
 	h := rc.ResponseWriter.Header()
 	if h.Get("Content-Type") == "" {
 		h.Set("Content-Type", http.DetectContentType(b))
@@ -84,7 +80,6 @@ type flusher interface {
 }
 
 func (rc *responseCompressor) Close() {
-
 	// Flush compressed data if compressor supports it.
 	if f, ok := rc.Writer.(flusher); ok {
 		f.Flush()
@@ -101,7 +96,6 @@ func (rc *responseCompressor) Close() {
 }
 
 func (rc *responseCompressor) setWriter(rw http.ResponseWriter, req *http.Request) {
-
 	acceptEncoding := strings.ToLower(req.Header.Get(`Accept-Encoding`))
 	encodings := strings.Split(acceptEncoding, `,`)
 
@@ -135,7 +129,6 @@ func (rc *responseCompressor) setWriter(rw http.ResponseWriter, req *http.Reques
 }
 
 func compressionShouldBeApplied(req *http.Request) bool {
-
 	_, filename := filepath.Split(req.RequestURI)
 	if len(filename) == 0 {
 		// there is a trailing slash so index html will be returned, and that is compressible

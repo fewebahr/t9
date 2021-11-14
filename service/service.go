@@ -17,7 +17,6 @@ type Service interface {
 
 // New returns a Server based on the designated t9.T9 and logger.Logger.
 func New(t9 t9.T9, logger logger.Logger) Service {
-
 	return &service{
 		t9:     t9,
 		logger: logger,
@@ -30,7 +29,6 @@ type service struct {
 }
 
 func (service *service) Lookup(ctx context.Context, request *proto.LookupRequest) (*proto.LookupResponse, error) {
-
 	// initialize response
 	response := &proto.LookupResponse{
 		Digits: request.Digits,
@@ -55,7 +53,6 @@ func (service *service) Lookup(ctx context.Context, request *proto.LookupRequest
 }
 
 func (service *service) logResponse(response *proto.LookupResponse, turnAroundTime time.Duration) {
-
 	if response.Status {
 		service.logger.Infof(
 			`turnaround=%s | digits=%s | exact=%t | words=%d`,

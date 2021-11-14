@@ -21,7 +21,6 @@ const (
 
 // ParseLevel turns the designated string into a log level or returns an error.
 func ParseLevel(levelStr string) (Level, error) {
-
 	switch levelStr {
 	case DebugLevel.String():
 		return DebugLevel, nil
@@ -38,7 +37,6 @@ func ParseLevel(levelStr string) (Level, error) {
 }
 
 func (l Level) String() string {
-
 	switch l {
 	case DebugLevel:
 		return `debug`
@@ -54,7 +52,6 @@ func (l Level) String() string {
 }
 
 func (l Level) getColor() *color.Color {
-
 	switch l {
 	case DebugLevel:
 		return color.New(color.Reset)
@@ -70,7 +67,6 @@ func (l Level) getColor() *color.Color {
 }
 
 func (l Level) getPrefix() string {
-
 	str := l.String()
 	paddedString := formatPadRight(str, 6)
 	coloredString := l.getColor().SprintFunc()(paddedString)
@@ -80,7 +76,6 @@ func (l Level) getPrefix() string {
 }
 
 func formatPadRight(in string, length int) string {
-
 	numSpaces := length - len(in)
 	return in + strings.Repeat(` `, numSpaces)
 }

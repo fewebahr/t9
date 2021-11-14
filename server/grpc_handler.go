@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -17,7 +18,6 @@ import (
 )
 
 func (s *server) instantiateAndRegisterGrpcHandler() error {
-
 	t9, err := s.getLoadedT9()
 	if err != nil {
 		return err
@@ -32,11 +32,11 @@ func (s *server) instantiateAndRegisterGrpcHandler() error {
 }
 
 func (s *server) getLoadedT9() (t9.T9, error) {
-
 	dictionaryReader, err := getDictionaryReader(s.configuration.DictionaryFile)
 	if err != nil {
 		return nil, err
 	}
+	defer dictionaryReader.Close()
 
 	t9, err := t9.NewCachingT9(s.configuration.CacheSize)
 	if err != nil {
@@ -45,7 +45,6 @@ func (s *server) getLoadedT9() (t9.T9, error) {
 
 	scanner := bufio.NewScanner(dictionaryReader)
 	for scanner.Scan() {
-
 		word := strings.TrimSpace(scanner.Text())
 		if len(word) == 0 {
 			continue
@@ -63,17 +62,13 @@ func (s *server) getLoadedT9() (t9.T9, error) {
 		return nil, errors.WithStack(err)
 	}
 
-	if closer, ok := dictionaryReader.(io.Closer); ok {
-		defer closer.Close() // clean up if necessary
-	}
-
 	return t9, nil
 }
 
-func getDictionaryReader(dictionaryFile string) (io.Reader, error) {
-
+func getDictionaryReader(dictionaryFile string) (io.ReadCloser, error) {
 	if dictionaryFile == "" {
-		return bytes.NewReader(assets.Dictionary), nil
+		reader := bytes.NewReader(assets.Dictionary)
+		return ioutil.NopCloser(reader), nil
 	}
 
 	file, err := os.Open(dictionaryFile)

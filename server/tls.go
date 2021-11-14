@@ -18,16 +18,16 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 
 	certPool.AppendCertsFromPEM(assets.Cert)
 
-	embeddedCertificate, err := getEmbeddedCertificate()
+	embeddedCertificate, err := tls.X509KeyPair(assets.Cert, assets.Key)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	// for now, assume no certificates are configured
 	getCertificate := func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 		// since this version of the function assumes no other certificates are
 		// designated, simply return the embedded certificate
-		return embeddedCertificate, nil
+		return &embeddedCertificate, nil
 	}
 
 	if len(s.configuration.CertificateFile) > 0 {
@@ -45,7 +45,7 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 
 			if hello.ServerName == `t9` {
 				// this is our internal client SNI designation so use embedded cert
-				return embeddedCertificate, nil
+				return &embeddedCertificate, nil
 			}
 
 			// otherwise use the designated cert
@@ -85,16 +85,6 @@ func getDesignatedCertificate(certFile, keyFile string) (*tls.Certificate, error
 	}
 
 	tlsCert, err := tls.X509KeyPair(certBuf, keyBuf)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	return &tlsCert, nil
-}
-
-func getEmbeddedCertificate() (*tls.Certificate, error) {
-
-	tlsCert, err := tls.X509KeyPair(assets.Cert, assets.Key)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
