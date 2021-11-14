@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func enableCompression(inner http.Handler, level int) http.Handler {
+func enableCompressionMiddleware(inner http.Handler, level int) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		compressor := newResponseCompressor(rw, req, level)
 		inner.ServeHTTP(compressor, req)
@@ -22,7 +22,6 @@ type responseCompressor struct {
 	http.ResponseWriter
 	http.Hijacker
 	http.Flusher
-	http.CloseNotifier
 	level int
 }
 
@@ -43,10 +42,6 @@ func newResponseCompressor(rw http.ResponseWriter, req *http.Request, level int)
 
 	if flusher, ok := rw.(http.Flusher); ok {
 		compressor.Flusher = flusher
-	}
-
-	if closeNotifier, ok := rw.(http.CloseNotifier); ok {
-		compressor.CloseNotifier = closeNotifier
 	}
 
 	compressor.Writer = rw // by default
