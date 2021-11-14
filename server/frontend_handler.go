@@ -20,6 +20,9 @@ func (s *server) instantiateFrontendHandler() error {
 	// handles default filename (index.html), content-type headers, etc.
 	frontendHandler := http.FileServer(http.FS(filesystem))
 
+	// support last-modified, ETAG, cache-control, expires
+	frontendHandler = enableBrowserCacheMiddleware(frontendHandler, s.logger)
+
 	// support compression
 	frontendHandler = enableCompressionMiddleware(frontendHandler, gzip.DefaultCompression)
 

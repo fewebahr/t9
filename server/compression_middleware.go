@@ -12,7 +12,12 @@ import (
 func enableCompressionMiddleware(inner http.Handler, level int) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		compressor := newResponseCompressor(rw, req, level)
+
+		// let upstream proxies and caches know that content and headers may change based on header
+		compressor.Header().Set("Vary", "Accept-Encoding")
+
 		inner.ServeHTTP(compressor, req)
+
 		compressor.Close()
 	})
 }

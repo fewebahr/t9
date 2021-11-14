@@ -64,7 +64,7 @@ While the server is running you may direct your browser to the address specified
 * Add cache-control/expires headers
 * Unit tests
 * Consider adopting zap for faster logging
-* Support Brotli (once there is native, pure-go support)
+* Consider Brotli compression
 
 ## Etc.
 
