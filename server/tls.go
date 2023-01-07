@@ -4,9 +4,9 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
+	"os"
 
-	"github.com/RobertGrantEllis/t9/assets"
+	"github.com/fewebahr/t9/assets"
 )
 
 func (s *server) getTLSConfig() (*tls.Config, error) {
@@ -74,12 +74,12 @@ func (s *server) getTLSConfig() (*tls.Config, error) {
 
 func getDesignatedCertificate(certFile, keyFile string) (*tls.Certificate, error) {
 
-	certBuf, err := ioutil.ReadFile(certFile)
+	certBuf, err := os.ReadFile(certFile)
 	if err != nil {
 		return nil, err
 	}
 
-	keyBuf, err := ioutil.ReadFile(keyFile)
+	keyBuf, err := os.ReadFile(keyFile)
 	if err != nil {
 		return nil, err
 	}

@@ -6,7 +6,7 @@ import (
 	"io/fs"
 	"net/http"
 
-	"github.com/RobertGrantEllis/t9/assets"
+	"github.com/fewebahr/t9/assets"
 )
 
 func (s *server) instantiateFrontendHandler() error {

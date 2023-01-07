@@ -5,16 +5,15 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 
 	"google.golang.org/grpc"
 
-	"github.com/RobertGrantEllis/t9/assets"
-	"github.com/RobertGrantEllis/t9/proto"
-	"github.com/RobertGrantEllis/t9/service"
-	"github.com/RobertGrantEllis/t9/t9"
+	"github.com/fewebahr/t9/assets"
+	"github.com/fewebahr/t9/proto"
+	"github.com/fewebahr/t9/service"
+	"github.com/fewebahr/t9/t9"
 )
 
 func (s *server) instantiateAndRegisterGrpcHandler() error {
@@ -68,7 +67,7 @@ func (s *server) getLoadedT9() (t9.T9, error) {
 func getDictionaryReader(dictionaryFile string) (io.ReadCloser, error) {
 	if dictionaryFile == "" {
 		reader := bytes.NewReader(assets.Dictionary)
-		return ioutil.NopCloser(reader), nil
+		return io.NopCloser(reader), nil
 	}
 
 	file, err := os.Open(dictionaryFile)

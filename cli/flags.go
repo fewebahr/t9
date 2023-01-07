@@ -4,10 +4,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
-	"github.com/RobertGrantEllis/t9/server"
+	"github.com/fewebahr/t9/server"
 )
 
 func constructServerConfigurationFromFlags(args ...string) *server.Configuration {
@@ -37,7 +37,7 @@ func addHelpAndParse(fs *flag.FlagSet, args ...string) {
 	fs.BoolVar(&help, `help`, help, `show this help message`)
 
 	// suppress failure output so we can do our own thing
-	fs.SetOutput(ioutil.Discard)
+	fs.SetOutput(io.Discard)
 
 	// parse the arguments into the configuration
 	err := fs.Parse(args[1:])

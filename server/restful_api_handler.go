@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/RobertGrantEllis/t9/proto"
+	"github.com/fewebahr/t9/proto"
 )
 
 func (s *server) instantiateAndRegisterRestfulHandler(pipeListener pipe.Listener, tlsConfig *tls.Config) error {

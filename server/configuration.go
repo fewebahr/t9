@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/RobertGrantEllis/t9/logger"
+	"github.com/fewebahr/t9/logger"
 )
 
 // Configuration encapsulates all configurable parameters of a Server
